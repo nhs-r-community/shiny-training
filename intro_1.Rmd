@@ -1,0 +1,386 @@
+---
+title: "Shiny training- intro"
+author: "Chris Beeley"
+date: "November 2020"
+output: 
+  ioslides_presentation:
+    css: temp.css
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+
+library(DiagrammeR)
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+```
+
+## Sessions
+
+* Three sessions of two hours
+* Multi speed to cater for different skill levels
+* Feel free to do some or all of the syllabus in each session
+* I'll try to stay on after each session if you need any more help
+
+## Session one
+
+* What is Shiny?
+* What does it do?
+* Intro to reactivity
+* *Application 1- minimal*
+* Your first application
+* *Application 2- Sitrep*
+* Build a real application
+* Reactive expressions
+* Optional
+    * NSE in Shiny applications
+    * Bookmarks
+
+## What is Shiny?
+
+* Shiny is a web application programming framework
+* It's a big sack of HTML, JavaScript, and CSS, all called from R, basically
+* It requires no knowledge of HTML, JavaScript, or CSS, but if you have that knowledge it will do more
+
+## What does Shiny do?
+
+* It does this
+
+```{r, echo = FALSE}
+
+shinyAppDir("~/R/x86_64-pc-linux-gnu-library/3.6/shiny/examples/01_hello/")
+
+```
+
+## But it also does this
+
+```{r, out.width = "1000px", echo = FALSE}
+
+knitr::include_graphics("figures/monte_carlo.png")
+
+```
+
+## And this
+
+```{r, out.width = "900px", echo = FALSE}
+
+knitr::include_graphics("figures/geoexplorer.png")
+
+```
+
+## How does Shiny work?
+
+* Reactive programming
+* When the inputs change, the outputs change
+* Outputs *take a dependency on* inputs
+* The Bad Old Days
+* What you lose
+* E.g. CRUD is hard
+* You can control reactive dependencies (more later)
+
+## One file, two file Shiny applications
+
+* Back in the day Shiny apps were two files
+* I'm going to teach you single file
+* I don't love single file but that's the way the wind is blowing
+* Either server.R and ui.R (defining server and UI)
+* Or app.R with separate bits for server and UI
+* UI- user interfacce
+* Server- the guts. Graphs, data munging, etc.
+
+## The fundamentals
+
+* The fundamentals of Shiny apps are very simple
+* You define a bunch of inputs using functions like textInput() and numericInput() in the UI
+* Each input has a name
+* You lay out your outputs in the UI using functions like textOutput() and plotOutput()
+* Each output has a name
+* Using the names you just defined in the UI, you define a bunch of outputs in the server using functions like renderPlot() and renderText()
+* Within the server you can access the value of inputs using input$nameOfInput
+* It makes a lot of sense if you just browse the code, which we will do now
+
+## Let's make an app!
+
+* File... 
+* New... 
+* Shiny web app... 
+* Application name... 
+* Single... 
+* Choose directory
+
+## We'll add a title to get warmed up
+
+* Inputs are defined like this 
+
+```{r, eval=FALSE}
+
+textInput("nameOfInput", "Label for input")
+
+```
+
+* See ?textInput for more
+* Add textInput(...) to the UI definition. In sidebarPanel()
+* Inputs are referred to like this 
+
+```{r, eval=FALSE}
+
+input$nameOfInput
+
+```
+
+* And then add main = input$nameOfInput to the hist(...)
+
+## The answer
+
+UI
+
+```{r, eval = FALSE}
+
+sidebarPanel(
+  sliderInput("bins",
+              "Number of bins:",
+              min = 1,
+              max = 50,
+              value = 30),
+  textInput("titleInput", "Add a title")
+),
+
+```
+
+Server
+
+```{r, eval = FALSE}
+
+hist(x, breaks = bins, col = 'darkgray', 
+     border = 'white', main = input$titleInput)
+
+```
+
+## Now let's make an application from scratch!
+
+* Demo **sitrep_first**
+
+## Some code for you to use
+
+```{r, eval = FALSE}
+
+# UI
+
+selectInput()
+
+# server side
+
+output$table <- renderDT({
+  
+  ShinyContactData %>% 
+    filter(Year %in% input$year,
+           Status %in% input$status) %>%
+    group_by(Month, Group1) %>% 
+    summarise(count = n()) %>% 
+    ungroup() %>% 
+    spread(., Group1, count)
+})
+
+```
+
+## Let's add a graph!
+
+* Demo **sitrep_second**
+* Add default to all in status code
+* Clean up the data with reactive expressions
+
+## Reactive expressions
+
+- Reactive expressions are expressions that change when their inputs change
+- They enable you to maintain the data fetch/ clean code for several outputs in one place
+- Crucially, they *cache* their results, which means that it's run once, for all the outputs, and only changes if its inputs change
+- Great for computationally intensive or bandwidth heavy data functions
+
+## Standard Shiny
+
+```{r, echo = FALSE, warning = FALSE}
+
+node_df <- create_node_df(n = 5 ,
+                          label = c("Input 1", "Input 2", "Output 1", 
+                                    "Output 2", "Output 3"),
+                          fontsize = 24,
+                          fillcolor = c("green", "green", "red", "red", "red"),
+                          fontcolor = "black")
+
+edge_df <- data.frame("from" = c(1, 1, 2, 2),
+                      "to" = c(3, 4, 4, 5))
+
+i_graph_1 <-
+  create_graph()
+
+i_graph_2 <-
+  i_graph_1 %>%
+  add_nodes_from_table(
+    table = node_df,
+    label_col = label)
+
+i_graph_3 <-
+  i_graph_2 %>%
+  add_edges_from_table(
+    table = edge_df,
+    from_col = from,
+    to_col = to,
+    from_to_map = id_external)
+
+i_graph_3 %>% render_graph()
+
+```
+
+## With reactive object
+
+```{r, echo = FALSE, warning = FALSE}
+
+node_dfR <- create_node_df(n = 6,
+                           label = c("Input 1", "Input 2", "Reactive object", "Output 1", 
+                                     "Output 2", "Output 3"),
+                           fontsize = 24,
+                           fillcolor = c("green", "green", "blue", "red", "red", "red"),
+                           fontcolor = "black")
+
+edge_dfR <- data.frame("from" = c(1, 2, 3, 3, 3),
+                       "to" = c(3, 3, 4, 5, 6))
+
+i_graph_1 <-
+  create_graph()
+
+i_graph_2 <-
+  i_graph_1 %>%
+  add_nodes_from_table(
+    table = node_dfR,
+    label_col = label)
+
+i_graph_3 <-
+  i_graph_2 %>%
+  add_edges_from_table(
+    table = edge_dfR,
+    from_col = from,
+    to_col = to,
+    from_to_map = id_external)
+
+i_graph_3 %>% render_graph()
+
+```
+
+## The code
+
+```{r, eval = FALSE}
+
+returnData <- reactive({
+  
+  return_data <- ShinyContactData
+  
+  if(isTruthy(input$status)){
+    
+    ## complete
+  }
+  
+  return_data %>% 
+    
+    ## complete  
+})
+
+```
+
+## The code
+
+```{r, eval = FALSE}
+
+output$table <- renderDT({
+  
+  returnData() %>% 
+    spread(., Group1, count)
+})
+
+output$graph <- renderPlot({
+  
+  returnData() %>% 
+    ggplot(aes(x = Month, y = count, colour = Group1)) +
+    geom_line()
+})
+
+```
+
+## Debugging
+
+* Start simple
+* Make sure your code works outside of Shiny!
+* Use of cat()
+* Breakpoints and browser()
+* Run options(shiny.reactlog=TRUE)
+* Run
+* Press Ctrl+F3 for an interactive summary of reactive activity in your application
+* This has saved me more than once
+
+## Any more for any more
+
+* Experience tells me that some of you will only get this far
+* Extra material for those who are ahead (which there are sometimes)
+* Passing variable names in Shiny applications
+* Bookmarking
+
+## Passing variable names
+
+```{r, error = TRUE}
+
+max_by <- function(data, var, by) {
+  data %>%
+    group_by(by) %>%
+    summarise(maximum = max({{ var }}, na.rm = TRUE))
+}
+
+starwars %>% 
+  max_by(height)
+
+```
+
+## Passing variable names
+
+```{r}
+
+max_by <- function(data, var, by) {
+  data %>%
+    group_by({{ by }}) %>%
+    summarise(maximum = max({{ var }}, na.rm = TRUE))
+}
+
+starwars %>% 
+  max_by(height)
+
+```
+
+## Application to Shiny
+
+* In Shiny we are passing strings, not bare variable names:
+
+```{r}
+
+max_by <- function(data, var, by) {
+  data %>%
+    group_by(.data[[by]]) %>%
+    summarise(maximum = max(.data[[var]], na.rm = TRUE))
+}
+  
+starwars %>% max_by("height", by = "gender")
+
+```
+
+* That's it! You understand how to pass strings
+* E.g. from selectInput()
+
+## Last application
+
+* Give the option to group by week/ month
+* Give the option to group by 
+* And add bookmarking the state of the app
+    * I'll leave that to your Google skills
+    * Function: enableBookmarking()
+
+
+
