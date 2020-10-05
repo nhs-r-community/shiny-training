@@ -50,7 +50,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ```{r, echo = FALSE}
 
-shinyAppDir("~/R/x86_64-pc-linux-gnu-library/3.6/shiny/examples/01_hello/")
+shinyAppDir(paste0(system.file(package = "shiny"), "/examples/01_hello/"))
 
 ```
 
