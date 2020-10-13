@@ -1,0 +1,133 @@
+---
+title: "Shiny training- intro"
+author: "Chris Beeley"
+date: "November 2020"
+output: 
+  ioslides_presentation:
+    css: temp.css
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+```
+
+## Introduction
+
+* Recap
+* *Application 3- A and E*
+* Tabset panels
+* Conditional UI
+* Render UI
+* Validate() and req()
+
+## Recap
+
+* Application setup
+* Reactivity
+* Reactive expressions
+* Optional:
+* NSE
+* Bookmarks
+
+## Tabset panels
+
+* Tabset panels are useful if you want multiple outputs but not all on the same page
+* If you give them an id you can test for which is selected too which is very useful.
+
+```{r, eval = FALSE}
+
+mainPanel(
+  tabsetPanel(id = "tabset"
+              tabPanel("Label", outputFunction("nameOfOutput")),
+              tabPanel("Label2", outputFunction2("nameOfOutput2"))
+  )
+)
+
+```
+
+## Let's build an app!
+
+* Open the a_and_e_code_first.R file
+* Contains a template for the tabPanel
+* Contains all server code
+* You need to lay out and app and add:
+* dateRangeInput (to select date)
+* selectInput (to select Trust)
+* plotOutput (to place graph in one tab)
+* leafletOutput (to place map in the other tab)
+* I suggest you use the wizard to produce a new app
+* File... New... Shiny web app... Application name... Single... Choose directory
+* Note that you need to select a Trust otherwise you will get an error (we're going to fix this later)
+* Answer is in a_and_e_first folder. Use sparingly!
+
+## Add more features
+
+* Conditional UI
+* Dynamic UI
+* Validating the state of the application
+
+## Dynamic UI
+
+* Producing dynamic UI is useful if you have a very large set of inputs but only want some depending on other inputs
+* In the application we're building today it's useful because not every org has data every year
+
+## Conditional panel
+
+* Conditional panels are useful if you only want to show your UI element when a certain condition pertains
+* Note that you provide JavaScript code in a string
+* Easier than it sounds
+* input$myInput becomes input.myInput
+
+```{r, eval = FALSE}
+
+# ui
+
+conditionalPanel(
+  condition = "input.myInput == 'yes'",
+  uiOutput("trustControl")
+)
+
+# server
+
+output$trustControl <- renderUI({
+  
+  selectInput(
+    ###
+  )
+})
+
+```
+
+## Validating state of application
+
+* Remember the nasty red error message we got before we selected a trust?
+* Shiny has two ways of avoiding these
+* req()
+* req() will refrain from running a block of code until whatever is inside it takes a valid value
+* validate() will also refrain from running a block of code but will also write a nice error message
+
+```{r eval = FALSE}
+
+# req()
+
+req(input$trust) # this will not run until input$trust has a value
+
+# validate()
+
+validate(
+  need(input$trust, "Please select a trust"),
+  need(input$somethingElse "Please select a value for this input too")
+)
+
+```
+
+## Let's add to the application
+
+* Open the a_and_e_code_second.R file
+* Conditional UI
+* Dynamic UI
+* Validating the state of the application
+* The answer is in the a_and_e_second folder. Use sparingly!

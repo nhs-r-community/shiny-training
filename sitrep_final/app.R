@@ -5,30 +5,33 @@ library(DT)
 
 load("ShinyContactData.rda")
 
-ui <- fluidPage(
-  
-  # Application title
-  titlePanel("Sitrep"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("groupBy", "Group by 1 or 2",
-                  choices = c("Group1", "Group2")),
-      selectInput("weekMonth", "Group by week or month", 
-                  choices = c("Week" = "Week", "Month")),
-      selectInput("year", "Select year(s)", 
-                  choices = unique(ShinyContactData$Year),
-                  multiple = TRUE, selected = max(ShinyContactData$Year)),
-      selectInput("status", "Filter by status (defaults to all)",
-                  choices = unique(ShinyContactData$Status),
-                  multiple = TRUE)
-    ),
-    mainPanel(
-      DTOutput("table")
+ui <- function(request){
+  fluidPage(
+    
+    # Application title
+    titlePanel("Sitrep"),
+    
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("groupBy", "Group by 1 or 2",
+                    choices = c("Group1", "Group2")),
+        selectInput("weekMonth", "Group by week or month", 
+                    choices = c("Week" = "Week", "Month")),
+        selectInput("year", "Select year(s)", 
+                    choices = unique(ShinyContactData$Year),
+                    multiple = TRUE, selected = max(ShinyContactData$Year)),
+        selectInput("status", "Filter by status (defaults to all)",
+                    choices = unique(ShinyContactData$Status),
+                    multiple = TRUE),
+        bookmarkButton()
+      ),
+      mainPanel(
+        DTOutput("table")
+      )
     )
   )
-)
+}
 
 
 # Define server logic required to draw a histogram
@@ -60,4 +63,5 @@ server <- function(input, output) {
 }
 
 # Run the application 
+enableBookmarking(store = "server")
 shinyApp(ui = ui, server = server)
