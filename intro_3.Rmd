@@ -1,0 +1,142 @@
+---
+title: "Shiny training- intro"
+author: "Chris Beeley"
+date: "November 2020"
+output: 
+  ioslides_presentation:
+    css: temp.css
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+```
+
+## Introduction 
+
+Application 3- enhance the A + E one
+
+* Layout
+* RMarkdown
+* shinydashboard
+* Interacting with a Shiny plot (TBH this is kind of hard)
+
+## Layout
+
+* fluidRow()
+* column(width = 6)
+* Columns add up to 12
+* That's it!
+
+## Example
+
+```{r}
+
+ui <- fluidPage(
+  fluidRow(
+    column(width = 6, wellPanel(p("This appears in one column"))
+    ),
+    column(width = 6, wellPanel(p("Then this in another column"))
+    )
+  ),
+  fluidRow(
+    column(width = 3, wellPanel(p("Then a thin column underneath the top row"))),
+    column(width = 9, wellPanel(p("Then a wide column next to that one")))
+  )
+)
+
+server <- function(input, output) {}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+## RMarkdown
+
+```{r, eval = FALSE}
+
+# UI
+
+downloadButton("downloadReport", "Download report")
+
+# server
+
+output$downloadReport <- downloadHandler(
+  content = function(file){
+    
+    params <- list(date_from = input$date[1],
+                   date_to = input$date[2],
+                   trust = input$trust)
+    
+    render(paste0("report.Rmd"), output_format = "word_document",
+           output_file = "report.docx", quiet = TRUE, params = params,
+           envir = new.env(parent = globalenv()))
+    
+    # copy docx to 'file'
+    file.copy(paste0("report.docx"), file, overwrite = TRUE)
+  }
+)
+
+```
+
+## In the report
+
+```{r, eval = FALSE}
+
+# YAML
+
+params: 
+  date_from : NA
+  date_to : NA
+  trust : NA
+output: html_document
+
+# R
+
+load("ae_attendances.RData")
+
+report_data <- ae_attendances %>% 
+  filter(period >= date_from, period <= date_to,
+         Name == trust)
+
+```
+
+* If they don't select a Trust first they will get an error
+* Multiple ways of doing this
+* Have a look in the answer sheet to see one after you've had a go yourself
+* Helper code in a_and_e_code_third.R
+* The answer is in the a_and_e_third folder. Use sparingly!
+
+## Shiny dashboard
+
+```{r, eval = FALSE}
+
+# this runs and produces a totally blank dashboard
+
+library(shiny)
+library(shinydashboard)
+
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(),
+  dashboardBody()
+)
+
+server <- function(input, output) { }
+
+shinyApp(ui, server)
+
+```
+
+* Your turn!
+* [https://rstudio.github.io/shinydashboard/index.html](https://rstudio.github.io/shinydashboard/index.html)
+* Answers in a_and_e_dashboard. Use sparingly
+
+## Finally
+
+* Or add some dynamic value boxes to {shinydashboard} (moderate- no answers)
+* Either make both plots interactive (hard- answers in a_and_e_interactive)
+* Make dynamic value boxes based on interacting with a plot (extreme- no answers)
+* You may wish to take one or all of these away as homework

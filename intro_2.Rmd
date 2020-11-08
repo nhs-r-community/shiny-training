@@ -29,8 +29,8 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 * Reactivity
 * Reactive expressions
 * Optional:
-* NSE
-* Bookmarks
+    * NSE
+    * Bookmarks
 
 ## Tabset panels
 

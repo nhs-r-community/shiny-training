@@ -1,0 +1,32 @@
+---
+title: "A and E report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+params: 
+  date_from : NA
+  date_to : NA
+  trust : NA
+---
+
+```{r setup, include=FALSE}
+
+load("ae_attendances.RData")
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+
+report_data <- ae_attendances  %>% 
+  filter(period >= params$date_from, period <= params$date_to,
+         Name == params$trust)
+
+report_data %>%
+  group_by(period, Name) %>%
+  summarise(mean_attendance = mean(attendances)) %>%
+  ggplot(aes(x = period, y = mean_attendance)) +
+  geom_line() +
+  facet_wrap(~ Name, scales = "free")
+
+```
+
