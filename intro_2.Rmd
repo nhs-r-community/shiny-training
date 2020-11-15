@@ -1,5 +1,5 @@
 ---
-title: "Shiny training- intro"
+title: "Shiny training- session 2"
 author: "Chris Beeley"
 date: "November 2020"
 output: 
@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```{r, eval = FALSE}
 
 mainPanel(
-  tabsetPanel(id = "tabset"
+  tabsetPanel(id = "tabset",
               tabPanel("Label", outputFunction("nameOfOutput")),
               tabPanel("Label2", outputFunction2("nameOfOutput2"))
   )
@@ -87,8 +87,19 @@ mainPanel(
 
 conditionalPanel(
   condition = "input.myInput == 'yes'",
-  uiOutput("trustControl")
+      selectInput("trust",
+                "Select Trust",
+                choices = unique(ae_attendances$Name),
+                multiple = TRUE)
 )
+
+```
+
+```{r, eval = FALSE}
+
+# ui
+
+uiOutput("trustControl")
 
 # server
 
@@ -131,3 +142,9 @@ validate(
 * Dynamic UI
 * Validating the state of the application
 * The answer is in the a_and_e_second folder. Use sparingly!
+
+## Bonus activity
+
+* Use renderUI() to make the dateRangeInput() start at the beginning of the data and finish at the end
+* In this application obviously the data is not dynamic so it isn't necessary
+* But a real application might very well include this functionality

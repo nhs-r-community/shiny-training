@@ -26,12 +26,9 @@ ui <- dashboardPage(
                 box(title = "Attendance over time",
                     plotOutput("graph")),
                 box(width = 3, 
-                    conditionalPanel(
-                      condition = "input.tabset == 'graph'",
                       uiOutput("trustControl")
                     )
                 )
-              )
       ),
       
       # Second tab content

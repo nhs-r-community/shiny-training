@@ -1,6 +1,8 @@
 
 ### layout
 
+# take out sidebar panel and replace with:
+
 fluidRow(
   column(3,
          # inputs
@@ -20,18 +22,19 @@ downloadButton("downloadReport", "Download report")
 # server
 
 output$downloadReport <- downloadHandler(
+  filename = "report.docx",
   content = function(file){
     
     params <- list(date_from = input$date[1],
                    date_to = input$date[2],
                    trust = input$trust)
     
-    render(paste0("report.Rmd"), output_format = "word_document",
+    render("report.Rmd", output_format = "word_document",
            output_file = "report.docx", quiet = TRUE, params = params,
            envir = new.env(parent = globalenv()))
     
     # copy docx to 'file'
-    file.copy(paste0("report.docx"), file, overwrite = TRUE)
+    file.copy("report.docx", file, overwrite = TRUE)
   }
 )
 
@@ -39,15 +42,18 @@ output$downloadReport <- downloadHandler(
 
 # YAML
 
+---
+  title: "A and E report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 params: 
   date_from : NA
 date_to : NA
 trust : NA
-output: html_document
-
-# R
-
-load("ae_attendances.RData")
+---
+  
+  # R
+  
+  load("ae_attendances.RData")
 
 report_data <- ae_attendances %>% 
   filter(period >= date_from, period <= date_to,

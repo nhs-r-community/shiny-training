@@ -1,9 +1,15 @@
 
 # conditional panel----
 
+input$tabset == "map" # test for this
+
 conditionalPanel(
   condition = ####,
-  uiOutput("trustControl")
+    selectInput("trust",
+                "Select Trust",
+                choices = unique(ae_attendances$Name),
+                multiple = TRUE)
+  
 )
 
 # dynamic UI----

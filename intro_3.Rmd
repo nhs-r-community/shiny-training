@@ -1,5 +1,5 @@
 ---
-title: "Shiny training- intro"
+title: "Shiny training- session 3"
 author: "Chris Beeley"
 date: "November 2020"
 output: 

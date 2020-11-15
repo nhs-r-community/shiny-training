@@ -166,6 +166,14 @@ hist(x, breaks = bins, col = 'darkgray',
 
 ```{r, eval = FALSE}
 
+# at the top of the code file
+
+library(tidyverse)
+library(lubridate)
+library(DT)
+
+load("ShinyContactData.rda")
+
 # UI
 
 selectInput()
@@ -329,14 +337,14 @@ output$graph <- renderPlot({
 
 ```{r, error = TRUE}
 
-max_by <- function(data, var, by) {
+max_by <- function(data, by) {
   data %>%
     group_by(by) %>%
-    summarise(maximum = max({{ var }}, na.rm = TRUE))
+    summarise(maximum = max(height, na.rm = TRUE))
 }
 
 starwars %>% 
-  max_by(height)
+  max_by(by)
 
 ```
 
@@ -344,14 +352,14 @@ starwars %>%
 
 ```{r}
 
-max_by <- function(data, var, by) {
+max_by <- function(data, by) {
   data %>%
     group_by({{ by }}) %>%
-    summarise(maximum = max({{ var }}, na.rm = TRUE))
+    summarise(maximum = max(height, na.rm = TRUE))
 }
 
 starwars %>% 
-  max_by(height)
+  max_by(gender)
 
 ```
 
@@ -364,10 +372,10 @@ starwars %>%
 max_by <- function(data, var, by) {
   data %>%
     group_by(.data[[by]]) %>%
-    summarise(maximum = max(.data[[var]], na.rm = TRUE))
+    summarise(maximum = max(height, na.rm = TRUE))
 }
   
-starwars %>% max_by("height", by = "gender")
+starwars %>% max_by(by = "gender")
 
 ```
 
@@ -377,7 +385,7 @@ starwars %>% max_by("height", by = "gender")
 ## Last application
 
 * Give the option to group by week/ month
-* Give the option to group by 
+* Give the option to group by group 1/ group 2
 * And add bookmarking the state of the app
     * I'll leave that to your Google skills
     * Function: enableBookmarking()

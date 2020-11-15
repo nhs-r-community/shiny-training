@@ -1,7 +1,15 @@
 
-### a and e code
+# UI 
 
-# UI template
+# select date range
+
+dateRangeInput() # as.Date("2016-04-01") to as.Date("2019-03-01")
+
+selectInput() # select trust
+
+plotOutput() # place graph in tab one
+
+leafletOutput() # place map in tab two
 
 mainPanel(
   tabsetPanel(
