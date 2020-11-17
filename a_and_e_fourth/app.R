@@ -21,8 +21,8 @@ ui <- fluidPage(
            conditionalPanel(
              condition = "input.tabset == 'graph'",
              uiOutput("trustControl")
-           )
-    ),
+           ),
+           downloadButton("downloadReport", "Download report")),
     
     column(9, 
            tabsetPanel(id = "tabset",
@@ -76,6 +76,35 @@ server <- function(input, output) {
       geom_line() + 
       facet_wrap(~ Name, scales = "free")
   })
+  
+  output$downloadReport <- downloadHandler(
+    filename = "report.docx",
+    content = function(file){
+      
+      if(!isTruthy(input$trust)){
+        
+        showModal(
+          modalDialog(
+            title = "Error!",
+            HTML("Please select a trust first"),
+            easyClose = TRUE
+          )
+        )
+      }
+      
+      params <- list(date_from = input$date[1],
+                     date_to = input$date[2],
+                     trust = input$trust)
+      
+      render("report.Rmd", output_format = "word_document",
+             output_file = "report.docx", quiet = TRUE, params = params,
+             envir = new.env(parent = globalenv()))
+      
+      # copy docx to 'file'
+      file.copy("report.docx", file, overwrite = TRUE)
+    }
+  )
+  
 }
 
 # Run the application 

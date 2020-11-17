@@ -193,11 +193,19 @@ output$table <- renderDT({
 
 ```
 
-## Let's add a graph!
+## The exercise
 
-* Demo **sitrep_second**
-* Add default to all in status code
-* Clean up the data with reactive expressions
+* Find this code in sitrep_first.R
+* A lot of this workshop will be you writing your own code
+* In each case you will have
+    * A code file with some hints in, like sitrep_first.R
+    * The answer (in this case in sitrep_first)
+* If you get stuck ask for help
+* Or look at the answer, but try to do this sparingly
+* Feel free to search the help (like ?renderDT)
+* Feel free to use Google
+* Feel free to ask for help
+* Today is designed to be like your actual coding (except in this case you have the answers 😉)
 
 ## Reactive expressions
 
@@ -275,6 +283,13 @@ i_graph_3 <-
 i_graph_3 %>% render_graph()
 
 ```
+
+## Let's add a graph!
+
+* Demo **sitrep_second**
+* Add default to all in status code
+* Clean up the data with reactive expressions
+* Find this code in sitrep_second.R
 
 ## The code
 
