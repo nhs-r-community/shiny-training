@@ -104,7 +104,22 @@ shinyApp(ui, server)
 
 ```{r, eval = FALSE}
 
+# https://rstudio.github.io/shinydashboard/structure.html#valuebox
 
+# ui
+
+valueBox()
+
+# Dynamic valueBoxes
+
+valueBoxOutput("daysBox")
+
+# server
+
+output$daysBox <- renderValueBox({
+  valueBox(
+  )
+})
 
 ```
 
@@ -115,7 +130,6 @@ shinyApp(ui, server)
 
 ## Finally
 
-* Or add some dynamic value boxes to {shinydashboard} (moderate- no answers)
 * Either make both plots interactive (hard- answers in a_and_e_interactive)
 * Make dynamic value boxes based on interacting with a plot (extreme- no answers)
 * You may wish to take one or all of these away as homework

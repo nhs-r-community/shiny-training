@@ -95,6 +95,8 @@ conditionalPanel(
 
 ```
 
+## Dynamic UI
+
 ```{r, eval = FALSE}
 
 # ui
