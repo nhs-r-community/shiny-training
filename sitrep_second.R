@@ -11,8 +11,9 @@ returnData <- reactive({
   }
   
   return_data %>% 
+    filter...()
     
-    ## complete  
+    ## complete- filter by year
 })
 
 output$table <- renderDT({

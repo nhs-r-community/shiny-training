@@ -10,6 +10,7 @@ load("ShinyContactData.rda")
 # ui
 
 selectInput()
+DTOutput()
 
 # server
 
