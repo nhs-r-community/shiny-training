@@ -87,10 +87,7 @@ mainPanel(
 
 conditionalPanel(
   condition = "input.myInput == 'yes'",
-      selectInput("trust",
-                "Select Trust",
-                choices = unique(ae_attendances$Name),
-                multiple = TRUE)
+  uiOutput("trustControl")
 )
 
 ```
@@ -107,9 +104,10 @@ uiOutput("trustControl")
 
 output$trustControl <- renderUI({
   
-  selectInput(
-    ###
-  )
+  selectInput("trust",
+              "Select Trust",
+              choices = unique(ae_attendances$Name),
+              multiple = TRUE)
 })
 
 ```

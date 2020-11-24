@@ -78,7 +78,7 @@ knitr::include_graphics("figures/geoexplorer.png")
 * The Bad Old Days
 * What you lose
 * E.g. CRUD is hard
-* You can control reactive dependencies (more later)
+* You can control reactive dependencies
 
 ## One file, two file Shiny applications
 
