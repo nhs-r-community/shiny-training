@@ -68,8 +68,8 @@ output: html_document
 load("ae_attendances.RData")
 
 report_data <- ae_attendances %>% 
-  filter(period >= date_from, period <= date_to,
-         Name == trust)
+  filter(period >= params$date_from, period <= params$date_to,
+         Name == params$trust)
 
 ```
 
@@ -128,8 +128,22 @@ output$daysBox <- renderValueBox({
 * [https://rstudio.github.io/shinydashboard/index.html](https://rstudio.github.io/shinydashboard/index.html)
 * Answers in a_and_e_dashboard. Use sparingly
 
+## Deployment
+
+* runGitHub("gapminder", "ChrisBeeley")
+* runUrl("http://www.myserver/shinyapps/myshinyapp.zip")
+* runGist("6571951")
+* Just stick it in a shared area and get people to run it themselves
+* shinyapps.io
+* ShinyProxy
+* Proxied authentication (Apache/ Nginx)
+* Paid (RStudio Connect/ Shiny Pro)
+* Cloud/ firewalled
+
 ## Finally
 
-* Either make both plots interactive (hard- answers in a_and_e_interactive)
+* Add some more value boxes and have a tinker with the rest of the layout of the application
+    * You could even go back to the layout functions that were in the bonus material for session 2
+* Make both plots interactive (hard- answers in a_and_e_interactive)
 * Make dynamic value boxes based on interacting with a plot (extreme- no answers)
 * You may wish to take one or all of these away as homework
