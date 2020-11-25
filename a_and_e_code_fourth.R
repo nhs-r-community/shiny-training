@@ -33,14 +33,16 @@ title: "A and E report"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 params: 
   date_from : NA
-date_to : NA
-trust : NA
+  date_to : NA
+  trust : NA
 ---
   
 # R
+    
+library(tidyverse)
   
 load("ae_attendances.RData")
 
 report_data <- ae_attendances %>% 
-  filter(period >= date_from, period <= date_to,
-         Name == trust)
+  filter(period >= params$date_from, period <= params$date_to,
+         Name == params$trust)
