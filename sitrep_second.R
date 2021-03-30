@@ -3,17 +3,11 @@
 
 returnData <- reactive({
   
-  return_data <- ShinyContactData
-  
-  if(isTruthy(input$status)){
-    
-    ## complete
-  }
-  
-  return_data %>% 
-    filter...()
-    
-    ## complete- filter by year
+  ShinyContactData %>% 
+    filter(...) %>% 
+    group_by(...) %>% 
+    summarise(...)
+
 })
 
 output$table <- renderDT({
