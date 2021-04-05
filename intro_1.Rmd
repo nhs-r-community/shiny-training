@@ -1,7 +1,6 @@
 ---
 title: "Shiny training- intro"
 author: "Chris Beeley"
-date: "November 2020"
 output: 
   ioslides_presentation:
     css: temp.css

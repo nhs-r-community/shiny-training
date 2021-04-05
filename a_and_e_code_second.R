@@ -12,8 +12,11 @@ mainPanel(
 )
 
 conditionalPanel(
-  condition = ####,
-    uiOutput("trustControl")
+  condition = "input.tabset == 'graph",
+    selectInput("trust",
+                "Select Trust",
+                choices = unique(filter_data()$Name),
+                multiple = TRUE)
   
 )
 

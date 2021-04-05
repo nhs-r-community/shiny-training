@@ -14,7 +14,8 @@ sidebarLayout(
     
     dateRangeInput(), # as.Date("2016-04-01") to as.Date("2019-03-01")
     
-    selectInput(), # select trust
+    selectInput(...,
+                multiple = TRUE), # select trust
     
   ),
   

@@ -1,7 +1,6 @@
 ---
 title: "Shiny training- session 2"
 author: "Chris Beeley"
-date: "November 2020"
 output: 
   ioslides_presentation:
     css: temp.css
@@ -80,6 +79,7 @@ mainPanel(
 * Note that you provide JavaScript code in a string
 * Easier than it sounds
 * input$myInput becomes input.myInput
+* Start the first exercise and build up
 
 ```{r, eval = FALSE}
 
@@ -87,7 +87,10 @@ mainPanel(
 
 conditionalPanel(
   condition = "input.myInput == 'yes'",
-  uiOutput("trustControl")
+  selectInput("trust",
+              "Select Trust",
+              choices = unique(ae_attendances$Name),
+              multiple = TRUE)
 )
 
 ```
