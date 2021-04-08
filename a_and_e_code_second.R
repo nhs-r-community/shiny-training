@@ -17,7 +17,6 @@ conditionalPanel(
                 "Select Trust",
                 choices = unique(filter_data()$Name),
                 multiple = TRUE)
-  
 )
 
 # dynamic UI----
@@ -32,7 +31,7 @@ output$trustControl <- renderUI({
   
   selectInput("trust",
               "Select Trust",
-              choices = unique(ae_attendances$Name),
+              choices = unique(filter_data()$Name),
               multiple = TRUE)
 })
 
