@@ -25,7 +25,7 @@ ui <- dashboardPage(
               fluidRow(
                 box(title = "Attendance over time",
                     plotOutput("graph")),
-                box(width = 3, 
+                box(width = 6, 
                       uiOutput("trustControl"),
                     valueBox(length(unique(ae_attendances$Name)), 
                              "Number of trusts",
