@@ -176,6 +176,8 @@ load("ShinyContactData.rda")
 # UI
 
 selectInput()
+DTOutput()
+plotOutput()
 
 # server side
 
@@ -283,7 +285,7 @@ i_graph_3 %>% render_graph()
 
 ```
 
-## Let's add a graph!
+## Let's add reactivity
 
 * Demo **sitrep_second**
 * Add default to all in status code
@@ -296,13 +298,6 @@ i_graph_3 %>% render_graph()
 
 returnData <- reactive({
   
-  return_data <- ShinyContactData
-  
-  if(isTruthy(input$status)){
-    
-    ## complete
-  }
-  
   return_data %>% 
     
     ## complete  
@@ -310,7 +305,7 @@ returnData <- reactive({
 
 ```
 
-## The code
+## The answer
 
 ```{r, eval = FALSE}
 

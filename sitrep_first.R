@@ -11,6 +11,7 @@ load("ShinyContactData.rda")
 
 selectInput()
 DTOutput()
+plotOutput()
 
 # server
 
@@ -23,4 +24,16 @@ output$table <- renderDT({
     summarise(count = n()) %>% 
     ungroup() %>% 
     spread(., Group1, count)
+})
+
+output$graph <- renderPlot({
+  
+  ShinyContactData %>% 
+    filter(Year %in% input$year,
+           Status %in% input$status) %>%
+    group_by(Month, Group1) %>% 
+    summarise(count = n()) %>% 
+    ungroup() %>% 
+    ggplot(aes(x = Month, y = count, colour = Group1)) +
+    geom_line()
 })

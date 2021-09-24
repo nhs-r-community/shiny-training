@@ -15,10 +15,12 @@ ui <- fluidPage(
     sidebarPanel(
       selectInput("year", "Select year(s)", 
                   choices = unique(ShinyContactData$Year),
-                  multiple = TRUE, selected = max(ShinyContactData$Year)),
-      selectInput("status", "Filter by status (defaults to all)",
+                  multiple = TRUE, 
+                  selected = max(ShinyContactData$Year)),
+      selectInput("status", "Filter by status",
                   choices = unique(ShinyContactData$Status),
-                  multiple = TRUE)
+                  multiple = TRUE,
+                  selected = unique(ShinyContactData$Status))
     ),
     mainPanel(
       DTOutput("table"),
@@ -33,15 +35,8 @@ server <- function(input, output) {
   
   returnData <- reactive({
     
-    return_data <- ShinyContactData
-    
-    if(isTruthy(input$status)){
-      
-      return_data <- ShinyContactData %>% 
-        filter(Status %in% input$status)
-    }
-    
     return_data %>% 
+      filter(Status %in% input$status)
       filter(Year %in% input$year) %>%
       group_by(Month, Group1) %>% 
       summarise(count = n()) %>% 

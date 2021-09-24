@@ -10,7 +10,6 @@ ui <- fluidPage(
   # Application title
   titlePanel("Sitrep"),
   
-  # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
       selectInput("year", "Select year(s)", 
@@ -23,13 +22,12 @@ ui <- fluidPage(
                   selected = unique(ShinyContactData$Status))
     ),
     mainPanel( 
-      DTOutput("table")
+      DTOutput("table"),
+      plotOutput("graph")
     )
   )
 )
 
-
-# Define server logic required to draw a histogram
 server <- function(input, output) {
   
   output$table <- renderDT({
@@ -41,6 +39,18 @@ server <- function(input, output) {
       summarise(count = n()) %>% 
       ungroup() %>% 
       spread(., Group1, count)
+  })
+  
+  output$graph <- renderPlot({
+    
+    ShinyContactData %>% 
+      filter(Year %in% input$year,
+             Status %in% input$status) %>%
+      group_by(Month, Group1) %>% 
+      summarise(count = n()) %>% 
+      ungroup() %>% 
+      ggplot(aes(x = Month, y = count, colour = Group1)) +
+      geom_line()
   })
 }
 
