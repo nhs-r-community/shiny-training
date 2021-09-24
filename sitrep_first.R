@@ -5,7 +5,7 @@ library(tidyverse)
 library(lubridate)
 library(DT)
 
-load("ShinyContactData.rda")
+load(url("https://github.com/nhs-r-community/shiny-training/blob/main/ShinyContactData.rda?raw=true"))
 
 # ui
 
