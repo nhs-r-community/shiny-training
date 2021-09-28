@@ -4,7 +4,7 @@ library(DT)
 library(leaflet)
 library(shinydashboard)
 
-load("ae_attendances.RData")
+load(url("https://github.com/nhs-r-community/shiny-training/blob/main/a_and_e_first/ae_attendances.RData?raw=true"))
 
 ui <- dashboardPage(
   dashboardHeader(title = "A and E data"),
