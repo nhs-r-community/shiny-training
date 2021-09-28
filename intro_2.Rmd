@@ -73,6 +73,26 @@ mainPanel(
 * Producing dynamic UI is useful if you have a very large set of inputs but only want some depending on other inputs
 * In the application we're building today it's useful because not every org has data every year
 
+## Dynamic UI
+
+```{r, eval = FALSE}
+
+# ui
+
+uiOutput("trustControl")
+
+# server
+
+output$trustControl <- renderUI({
+  
+  selectInput("trust",
+              "Select Trust",
+              choices = unique(filter_data()$Name),
+              multiple = TRUE)
+})
+
+```
+
 ## Conditional panel
 
 * Conditional panels are useful if you only want to show your UI element when a certain condition pertains
@@ -92,26 +112,6 @@ conditionalPanel(
               choices = unique(ae_attendances$Name),
               multiple = TRUE)
 )
-
-```
-
-## Dynamic UI
-
-```{r, eval = FALSE}
-
-# ui
-
-uiOutput("trustControl")
-
-# server
-
-output$trustControl <- renderUI({
-  
-  selectInput("trust",
-              "Select Trust",
-              choices = unique(filter_data()$Name),
-              multiple = TRUE)
-})
 
 ```
 

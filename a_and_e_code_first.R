@@ -3,7 +3,7 @@
 
 library(tidyverse)
 library(leaflet)
-load("ae_attendances.Rdata")
+load(url("https://github.com/nhs-r-community/shiny-training/blob/main/a_and_e_first/ae_attendances.RData?raw=true"))
 
 # UI 
 

@@ -366,7 +366,7 @@ max_by <- function(data, by) {
 }
 
 starwars %>% 
-  max_by(by)
+  max_by(gender)
 
 ```
 
@@ -391,8 +391,10 @@ starwars %>%
 
 ```{r}
 
-max_by <- function(data, var, by) {
-  data %>%
+max_by <- function(df, by) {
+  
+  df %>%
+    filter() %>% 
     group_by(.data[[by]]) %>%
     summarise(maximum = max(height, na.rm = TRUE))
 }
