@@ -13,10 +13,7 @@ ui <- dashboardPage(
                 menuItem("Graph", tabName = "graph", icon = icon("dashboard")),
                 menuItem("Map", tabName = "map", icon = icon("th"))
     ),
-    dateRangeInput("date", "Date range", 
-                   as.Date("2016-04-01"), 
-                   as.Date("2019-03-01"),
-                   startview = "year")
+    uiOutput("dateRangeUI")
   ),
   dashboardBody(
     tabItems(
@@ -26,7 +23,10 @@ ui <- dashboardPage(
                 box(title = "Attendance over time",
                     plotOutput("graph")),
                 box(width = 6, 
-                      uiOutput("trustControl"),
+                    selectInput("trust",
+                                "Select Trust",
+                                choices = unique(ae_attendances$Name),
+                                multiple = TRUE),
                     valueBox(length(unique(ae_attendances$Name)), 
                              "Number of trusts",
                              icon = icon("hospital")),
@@ -54,12 +54,12 @@ server <- function(input, output) {
       arrange(Name)
   })
   
-  output$trustControl <- renderUI({
+  output$dateRangeUI <- renderUI({
     
-    selectInput("trust",
-                "Select Trust",
-                choices = unique(filter_data()$Name),
-                multiple = TRUE)
+    dateRangeInput("date", "Date range", 
+                   as.Date("2016-04-01"), 
+                   as.Date("2019-03-01"),
+                   startview = "year")
   })
   
   output$trustMap <- renderLeaflet({

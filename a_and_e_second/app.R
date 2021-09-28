@@ -3,7 +3,7 @@ library(tidyverse)
 library(DT)
 library(leaflet)
 
-load("ae_attendances.RData")
+load(url("https://github.com/nhs-r-community/shiny-training/blob/main/a_and_e_first/ae_attendances.RData?raw=true"))
 
 ui <- fluidPage(
   
@@ -12,13 +12,15 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      dateRangeInput("date", "Date range", 
-                     as.Date("2016-04-01"), 
-                     as.Date("2019-03-01"),
-                     startview = "year"),
+      
+      uiOutput("dateRangeUI"),
+      
       conditionalPanel(
         condition = "input.tabset == 'graph'",
-        uiOutput("trustControl")
+        selectInput("trust",
+                    "Select Trust",
+                    choices = unique(ae_attendances$Name),
+                    multiple = TRUE)
       )),
     
     mainPanel(
@@ -40,12 +42,12 @@ server <- function(input, output) {
       arrange(Name)
   })
   
-  output$trustControl <- renderUI({
+  output$dateRangeUI <- renderUI({
     
-    selectInput("trust",
-                "Select Trust",
-                choices = unique(filter_data()$Name),
-                multiple = TRUE)
+    dateRangeInput("date", "Date range", 
+                   as.Date("2016-04-01"), 
+                   as.Date("2019-03-01"),
+                   startview = "year")
   })
   
   output$trustMap <- renderLeaflet({
