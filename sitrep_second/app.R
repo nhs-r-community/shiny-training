@@ -35,7 +35,7 @@ server <- function(input, output) {
   
   returnData <- reactive({
     
-    return_data %>% 
+    ShinyContactData %>% 
       filter(Status %in% input$status)
       filter(Year %in% input$year) %>%
       group_by(Month, Group1) %>% 
