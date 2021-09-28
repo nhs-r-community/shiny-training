@@ -57,8 +57,8 @@ server <- function(input, output) {
   output$dateRangeUI <- renderUI({
     
     dateRangeInput("date", "Date range", 
-                   as.Date("2016-04-01"), 
-                   as.Date("2019-03-01"),
+                   min(ae_attendances$period), 
+                   max(ae_attendances$period),
                    startview = "year")
   })
   

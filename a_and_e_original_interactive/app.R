@@ -47,12 +47,12 @@ server <- function(input, output) {
       arrange(Name)
   })
   
-  output$trustControl <- renderUI({
+  output$dateRangeUI <- renderUI({
     
-    selectInput("trust",
-                "Select Trust",
-                choices = unique(filter_data()$Name),
-                multiple = TRUE)
+    dateRangeInput("date", "Date range", 
+                   min(ae_attendances$period), 
+                   max(ae_attendances$period),
+                   startview = "year")
   })
   
   output$trustMap <- renderLeaflet({
