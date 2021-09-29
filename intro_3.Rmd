@@ -60,7 +60,6 @@ params:
   date_from : NA
   date_to : NA
   trust : NA
-output: html_document
 
 # R
 
