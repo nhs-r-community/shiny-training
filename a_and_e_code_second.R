@@ -1,4 +1,12 @@
 
+mainPanel(
+  tabsetPanel(id = "tabset", # need id
+              tabPanel("Graph", value = "graph", plotOutput("graph")),
+              tabPanel("Map", value = "map", 
+                       leafletOutput("trustMap", height = 600, width = 500)
+              ))
+)
+
 # dynamic UI----
 
 # ui 
@@ -18,14 +26,6 @@ output$dateRangeUI <- renderUI({
 # conditional panel----
 
 input$tabset == "graph" # test for this
-
-mainPanel(
-  tabsetPanel(id = "tabset", # need id
-              tabPanel("Graph", value = "graph", plotOutput("graph")),
-              tabPanel("Map", value = "map", 
-                       leafletOutput("trustMap", height = 600, width = 500)
-              ))
-)
 
 conditionalPanel(
   condition = "input.tabset == 'graph'",
