@@ -6,14 +6,17 @@ ui <- dashboardPage(
                 menuItem("Graph", tabName = "graph", icon = icon("dashboard")),
                 menuItem("Map", tabName = "map", icon = icon("th"))
     ),
-    dateRangeInput()
+    uiOutput("dateRangeUI")
   ),
   dashboardBody(
     tabItems(
       # First tab content
       tabItem(tabName = "graph",
               fluidRow(plotOutput("graph"),
-                       uiOutput("trustControl"))
+                       selectInput("trust",
+                                   "Select Trust",
+                                   choices = unique(ae_attendances$Name),
+                                   multiple = TRUE))
       ),
       
       # Second tab content
