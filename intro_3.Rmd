@@ -39,12 +39,12 @@ output$downloadReport <- downloadHandler(
                    date_to = input$date[2],
                    trust = input$trust)
     
-    render(paste0("report.Rmd"), output_format = "word_document",
+    render("report.Rmd", output_format = "word_document",
            output_file = "report.docx", quiet = TRUE, params = params,
            envir = new.env(parent = globalenv()))
     
     # copy docx to 'file'
-    file.copy(paste0("report.docx"), file, overwrite = TRUE)
+    file.copy("report.docx", file, overwrite = TRUE)
   }
 )
 
