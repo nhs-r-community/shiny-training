@@ -12,13 +12,13 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      dateRangeInput("date", "Date range", 
-                     as.Date("2016-04-01"), 
-                     as.Date("2019-03-01"),
-                     startview = "year"),
+      uiOutput("dateRangeUI"),
       conditionalPanel(
         condition = "input.tabset == 'graph'",
-        uiOutput("trustControl")
+        selectInput("trust",
+                    "Select Trust",
+                    choices = unique(ae_attendances$Name),
+                    multiple = TRUE)
       )),
     
     mainPanel(
