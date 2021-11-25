@@ -61,6 +61,7 @@ Note that the {usethis} package must be downloaded first to run and has been com
 
 Other packages that need to be installed for this course are:
 
+``` r
 install.packages("tidyverse")
 install.packages("leaflet")
 install.packages("rmarkdown")
@@ -70,3 +71,4 @@ install.packages("DiagrammeR")
 install.packages("DT")
 install.packages("lubridate")
 install.packages("knitr")
+```
