@@ -36,17 +36,13 @@ The course is intended for analysts with little to no prior experience of Shiny 
 
 -   Interacting with a Shiny plot
 
--   Optional:
-
-    -   Modules
-
-(please note that at the time of writing this is subject to revision because the training is not yet complete)
 
 ## Prerequisites
 
 The material is pitched at analysts with at least beginner level of R. The more familiar you are with R, the better able you will be to complete the exercises but if you get stuck you can browse the answers so you shouldn't get completely left behind. Those who are very competent at R or have a bit of experience with Shiny are likely to get through the material with time to spare and there is extra material for those who might otherwise finish a bit early.
 
 ## Preparation
+
 For the course you can either use the NHS-R Community cloud which has everything set up or you can download all the course material to your own laptop. Instructions for the NHS-R Community introduction to R and R Studio are same up to the point of installing packages.
 
 You can also type the following code into the Console:
