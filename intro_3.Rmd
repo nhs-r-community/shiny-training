@@ -138,6 +138,12 @@ output$daysBox <- renderValueBox({
 * Paid (RStudio Connect/ Shiny Pro)
 * Cloud/ firewalled
 
+## Loading data
+
+* CSV/ .Rdata
+* {pins}
+* SQL
+
 ## Finally
 
 * Add some more value boxes and have a tinker with the rest of the layout of the application

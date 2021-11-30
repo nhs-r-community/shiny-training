@@ -31,7 +31,7 @@ conditionalPanel(
   condition = "input.tabset == 'graph'",
     selectInput("trust",
                 "Select Trust",
-                choices = unique(filter_data()$Name),
+                choices = unique(ae_attendances$Name),
                 multiple = TRUE)
 )
 
