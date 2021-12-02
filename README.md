@@ -4,6 +4,8 @@
 
 This training has been prepared for delivery by the NHS-R community but all the source materials are provided under an open licence. If you work in health and social care in the UK and you would like to attend this training (which is provided for free) then please use the contact information on the NHS-R community page to get in touch with NHS-R. If you'd like to run it in your organisation feel free to get in touch or just use the materials however you please.
 
+You can watch this [session being delivered on YouTube](https://www.youtube.com/watch?v=wEYaeltxlys).
+
 If you have comments or suggestions please get in touch with the author or file an issue or a pull request.
 
 ## Course outline
