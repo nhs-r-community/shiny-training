@@ -1,0 +1,78 @@
+---
+title: "Shiny Training Cheat Sheet"
+output: 
+  html_document: 
+    theme: cerulean
+  pdf_document: 
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+```
+
+## Create a new Shiny app
+
+File > New File > Shiny Web App...
+Enter name for app, set as single file app (if not already selected) and choose directory.
+Finally, click Create.
+
+## Basic Shiny
+
+### Inputs
+
+```
+{typeOfInput}Input(inputId, label, ...)
+```
+
+### Outputs
+
+```
+{typeOfOutput}Output(outputId, ...)
+```
+
+### Reactive expressions
+
+```
+reactiveData <- reactive({
+  return_data %>%
+  ...
+})
+
+output$table <- renderDT({
+  returnData() %>%
+  ...
+})
+```
+
+### Example
+
+```
+ui <- fluidPage(
+  
+  textInput("myInput", "I'm a text input!"),
+  textOutput("myOutput")
+)
+
+server <- function(input, output, session) {
+  
+  reactiveText <- reactive({
+    upper(input$myInput)
+  })
+  
+  output$myOutput <- renderText({
+    reactiveText() # Reference a reactive expression - it is not a function!
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Debugging
+
+- Start simple
+- Make sure your code works outside of Shiny! One way of writing Shiny apps is known as **markdown first**; you write your code in RMarkdown initially, and only once everything (or some logical unit of the whole code) is working, only then create (or add to) a `{shiny}` app
+- Use the `cat()` or `print()` functions
+- Breakpoints and `browser()`
+- Run `options(shiny.reactlog=TRUE)`, run the app and press `Ctrl+F3` for an interactive summary of reactive activity
