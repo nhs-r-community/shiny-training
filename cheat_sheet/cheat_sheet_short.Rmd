@@ -18,18 +18,37 @@ File > New File > Shiny Web App...
 Enter name for app, set as single file app (if not already selected) and choose directory.
 Finally, click Create.
 
-## Basic Shiny
+## Basic Shiny- UI
 
 ### Inputs
 
 ```
 {typeOfInput}Input(inputId, label, ...)
+# e.g. textInput("title" "Enter title:")
 ```
+Access inputs with input$inputId.
 
 ### Outputs
 
 ```
 {typeOfOutput}Output(outputId, ...)
+# e.g. plotOutput("line_graph")
+```
+## Basic Shiny- server
+
+### Rendering output
+
+```
+output$outputId <- render{typeOfOutput}({
+  # output code
+})
+# e.g. 
+
+
+output$line_graph <- renderPlot({
+  plot(1:10, main = input$title)
+ })
+
 ```
 
 ### Reactive expressions
