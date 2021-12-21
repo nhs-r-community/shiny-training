@@ -172,120 +172,65 @@ pre code {
 <h2>Create a new Shiny app</h2>
 <p>File &gt; New File &gt; Shiny Web App… Enter name for app, set as single file app (if not already selected) and choose directory. Finally, click Create.</p>
 </div>
-<div id="input-elements" class="section level2">
-<h2>Input elements</h2>
-<p>In <code>{shiny}</code> input elements follow a pattern like below, where the ellipsis <code>...</code> means any other arguments, and these arguments will depend on the type of input.</p>
-<p><code>{typeOfInput}Input(inputId, label, ...)</code></p>
-<p>For example</p>
-<p><code>textInput(&quot;nameOfInput&quot;, &quot;Label for input&quot;)</code></p>
-<p>Any element you create in <code>{shiny}</code> is translated to HTML.</p>
-<pre class="r"><code>print(textInput(&quot;nameOfInput&quot;, &quot;Label for input&quot;))</code></pre>
-<pre><code>## &lt;div class=&quot;form-group shiny-input-container&quot;&gt;
-##   &lt;label class=&quot;control-label&quot; id=&quot;nameOfInput-label&quot; for=&quot;nameOfInput&quot;&gt;Label for input&lt;/label&gt;
-##   &lt;input id=&quot;nameOfInput&quot; type=&quot;text&quot; class=&quot;form-control&quot; value=&quot;&quot;/&gt;
-## &lt;/div&gt;</code></pre>
-<div id="adding-an-input" class="section level3">
-<h3>Adding an input</h3>
-<p>To add an input element, you just need to call the desired input function in your <code>ui</code> function, supplying as a minimum the <code>inputId</code> and <code>label</code> arguments. If you want to check what arguments are available for a specific input, remember to use the <code>?</code> in front of a function or press <code>F1</code> with the input function selected in your code.</p>
-<p>A simple example is</p>
-<pre><code>ui &lt;- fluidPage(
-  textInput(&quot;myInput&quot;, &quot;I&#39;m a text input!&quot;)
-)
+<div id="basic-shiny" class="section level2">
+<h2>Basic Shiny</h2>
+<div id="ui" class="section level3">
+<h3>UI</h3>
+<div id="inputs" class="section level4">
+<h4>Inputs</h4>
+<pre><code>{typeOfInput}Input(inputId, label, ...)
+# e.g. textInput(&quot;title&quot; &quot;Enter title:&quot;)</code></pre>
+<p>Access inputs with input$inputId.</p>
+</div>
+<div id="outputs" class="section level4">
+<h4>Outputs</h4>
+<pre><code>{typeOfOutput}Output(outputId, ...)
+# e.g. plotOutput(&quot;line_graph&quot;)</code></pre>
+<p>Access outputs with output$outputId.</p>
+</div>
+</div>
+<div id="server" class="section level3">
+<h3>Server</h3>
+<div id="rendering-output" class="section level4">
+<h4>Rendering output</h4>
+<pre><code>output$outputId &lt;- render{typeOfOutput}({
+  # output code
+})
 
-server &lt;- function(input, output, session) {
-  
-}
+# e.g. 
 
-shinyApp(ui, server)</code></pre>
+output$line_graph &lt;- renderPlot({
+  plot(1:10, main = input$title)
+ })
+</code></pre>
 </div>
-</div>
-<div id="output-elements" class="section level2">
-<h2>Output elements</h2>
-<p>Output elements in <code>{shiny}</code> follow a pattern like</p>
-<p><code>{typeOfOutput}Output(outputId, ...)</code></p>
-<p>Just like inputs, the additional arguments vary with the output type.</p>
-<p>For example</p>
-<p><code>textOutput(&quot;nameOfOutput&quot;)</code></p>
-<p>As mentioned for inputs, an output element becomes HTML when the app is run.</p>
-<pre class="r"><code>print(textOutput(&quot;nameOfOutput&quot;))</code></pre>
-<pre><code>## &lt;div id=&quot;nameOfOutput&quot; class=&quot;shiny-text-output&quot;&gt;&lt;/div&gt;</code></pre>
-<div id="accessing-an-input" class="section level3">
-<h3>Accessing an input</h3>
-<p>To access, or refer to, an input, we normally use the syntax</p>
-<p><code>input$nameOfInput</code></p>
-<p>Shiny adds all inputs you declare to an internal named list called <code>input</code>. Because it is a list, you can also access inputs like</p>
-<p><code>input[[&quot;nameOfInput&quot;]]</code></p>
-</div>
-<div id="adding-an-output" class="section level3">
-<h3>Adding an output</h3>
-<p>Just as inputs are added to the <code>ui</code> function, so too with outputs. Continuing the simple app already shown, we could add an output like below.</p>
-<pre><code>ui &lt;- fluidPage(
-  textInput(&quot;myInput&quot;, &quot;I&#39;m a text input!&quot;),
-  textOutput(&quot;myOutput&quot;)
-)
-
-server &lt;- function(input, output, session) {
-  
-}
-
-shinyApp(ui, server)</code></pre>
-<p>However, running this app would look just the same whether the output is there or not. This is because we have not told <code>{shiny}</code> just <em>what</em> the output should display.</p>
-</div>
-<div id="accessing-an-output" class="section level3">
-<h3>Accessing an output</h3>
-<p>As you might expect, outputs are handled similarly to inputs; you access them like</p>
-<p><code>output$nameOfOutput</code></p>
-<p>or</p>
-<p><code>output[[&quot;nameOfOutput&quot;]]</code></p>
-</div>
-<div id="adding-content-to-an-output" class="section level3">
-<h3>Adding content to an output</h3>
-<p>For an output to actually display anything, you must add some content to it. This is done by using one of the family of <code>render</code> functions. They follow a pattern like</p>
-<p><code>render{typeOfElement}(expr, ...)</code></p>
-<p>For example</p>
-<p><code>renderText(&quot;I&#39;ll appear on the page when the app is run&quot;)</code></p>
-<p>To assign this to an output we use syntax like</p>
-<p><code>output$myOutput &lt;- renderText({&quot;Some output&quot;})</code></p>
-<p>These output assignments belong in the <code>server</code> function of the app, like below</p>
-<pre><code>ui &lt;- fluidPage(
-  textInput(&quot;myInput&quot;, &quot;I&#39;m a text input!&quot;),
-  textOutput(&quot;myOutput&quot;)
-)
-
-server &lt;- function(input, output, session) {
-  output$myOutput &lt;- renderText({&quot;...and I&#39;m a text output!&quot;})
-}
-
-shinyApp(ui, server)</code></pre>
-</div>
-</div>
-<div id="reactivity" class="section level2">
-<h2>Reactivity</h2>
-<p>In <code>{shiny}</code> we have a powerful technique for writing reactive apps. Using reactive expressions we can create expressions whose output depends on their input. This allows for dynamic behaviour, as a user makes choices with the inputs of the app.</p>
-<p>To create a reactive expression use the syntax</p>
+<div id="reactive-expressions" class="section level4">
+<h4>Reactive expressions</h4>
 <pre><code>reactiveData &lt;- reactive({
-
   return_data %&gt;%
   ...
-})</code></pre>
-<p>To use this expression, we use the same syntax as we do for calling a function with no arguments, <code>reactiveData()</code></p>
-<p>For example</p>
-<pre><code>output$table &lt;- renderDT({
+})
 
+output$table &lt;- renderDT({
   returnData() %&gt;%
   ...
 })</code></pre>
-<p>Note that reactive expressions can only be used in a <strong>reactive context</strong>. This includes the <code>render</code> family of functions.</p>
-<p>Continuing the simple app, we could have</p>
+</div>
+</div>
+<div id="example" class="section level3">
+<h3>Example</h3>
 <pre><code>ui &lt;- fluidPage(
+  
   textInput(&quot;myInput&quot;, &quot;I&#39;m a text input!&quot;),
   textOutput(&quot;myOutput&quot;)
 )
 
 server &lt;- function(input, output, session) {
+  
   reactiveText &lt;- reactive({
     upper(input$myInput)
   })
+  
   output$myOutput &lt;- renderText({
     reactiveText() # Reference a reactive expression - it is not a function!
   })
@@ -293,14 +238,9 @@ server &lt;- function(input, output, session) {
 
 shinyApp(ui, server)</code></pre>
 </div>
+</div>
 <div id="debugging" class="section level2">
 <h2>Debugging</h2>
-<p>As Hadley Wickham says many times in his numerous books and blogs</p>
-<blockquote>
-<p>Debugging Shiny code is hard</p>
-</blockquote>
-<p>This is often due to the complexities introduced by reactivity.</p>
-<p>Some tips for debugging include</p>
 <ul>
 <li>Start simple</li>
 <li>Make sure your code works outside of Shiny! One way of writing Shiny apps is known as <strong>markdown first</strong>; you write your code in RMarkdown initially, and only once everything (or some logical unit of the whole code) is working, only then create (or add to) a <code>{shiny}</code> app</li>
@@ -308,6 +248,134 @@ shinyApp(ui, server)</code></pre>
 <li>Breakpoints and <code>browser()</code></li>
 <li>Run <code>options(shiny.reactlog=TRUE)</code>, run the app and press <code>Ctrl+F3</code> for an interactive summary of reactive activity</li>
 </ul>
+</div>
+<div id="tabset-panels-and-conditional-ui" class="section level2">
+<h2>Tabset panels and conditional UI</h2>
+<p>Separate content into tabs using <code>tabsetPanel</code> and <code>tabPanel</code>. Use the <code>value</code> argument of <code>tabPanel</code> as a way of detecting which tab is currently selected.</p>
+<p>Use <code>conditionalPanel</code> with a JavaScript <code>condition</code> statement to change the UI depending on the currently selected tab.</p>
+<pre><code>sidebarLayout(
+    sidebarPanel(
+      
+      conditionalPanel(
+        condition = &quot;input.tabset == &#39;graph&#39;&quot;,
+        selectInput(&quot;trust&quot;,
+                    &quot;Select Trust&quot;,
+                    choices = unique(ae_attendances$Name),
+                    multiple = TRUE)
+      )),
+    
+    mainPanel(
+      tabsetPanel(id = &quot;tabset&quot;,
+                  tabPanel(&quot;Graph&quot;, value = &quot;graph&quot;, plotOutput(&quot;graph&quot;)),
+                  tabPanel(&quot;Map&quot;, value = &quot;map&quot;, 
+                           leafletOutput(&quot;trustMap&quot;, height = 600, width = 500)
+                  ))
+    )
+  )</code></pre>
+</div>
+<div id="dynamic-ui" class="section level2">
+<h2>Dynamic UI</h2>
+<p>Create dynamic UI elements using <code>uiOutput</code> and <code>renderUI</code>.</p>
+<pre><code>ui &lt;- fluidPage(
+  ...
+  uiOutput(&quot;dateRangeUI&quot;),
+  ...
+)
+
+server &lt;- function(input, output) {
+  ...
+  output$dateRangeUI &lt;- renderUI({
+    
+    dateRangeInput(&quot;date&quot;, &quot;Date range&quot;, 
+                   min(ae_attendances$period), 
+                   max(ae_attendances$period),
+                   startview = &quot;year&quot;)
+  })
+  ...</code></pre>
+</div>
+<div id="validation-of-app-state" class="section level2">
+<h2>Validation of app state</h2>
+<div id="req" class="section level3">
+<h3><code>req</code></h3>
+<p>Simply stops further running of a code block when some value is not set. Below, any further code will not run until both <code>input$trust</code> and <code>input$year</code> has a value.</p>
+<pre><code>req(
+  input$trust,
+  input$year
+)
+...</code></pre>
+</div>
+<div id="validate" class="section level3">
+<h3><code>validate</code></h3>
+<p>Same as <code>req</code>, but also allows for a message to be displayed when an expected value is not set. Each message below will be displayed according to the truthiness of <code>input$trust</code> and <code>input$year</code>. Once both have a truthy value, the messages will not be displayed and any further code will be run.</p>
+<pre><code>validate(
+  need(input$trust, &quot;Please select a trust&quot;),
+  need(input$year,  &quot;Please select a year&quot;)
+)
+...</code></pre>
+</div>
+</div>
+<div id="layout-functions" class="section level2">
+<h2>Layout functions</h2>
+<div id="non-navigable-layouts" class="section level3">
+<h3>Non-navigable layouts</h3>
+<p>When using <code>fluidRow</code> and <code>column</code>, remember that a full row consists of 12 units. The <code>splitLayout</code> function allows for fine-grained control over exact column splits. A simple way to get a single column of UI, with each element on it’s own row, is <code>verticalLayout</code>. These are just some commonly used layouts, see the <code>{shiny}</code> documentation for more examples.</p>
+<pre class="r"><code>ui &lt;- fluidPage(
+  splitLayout(
+    cellWidths = c(&quot;25%&quot;, &quot;75%&quot;),
+    wellPanel(p(&quot;Panel 1&quot;)),
+    wellPanel(p(&quot;Panel 2&quot;))
+  ),
+  verticalLayout(
+    wellPanel(p(&quot;Panel 3&quot;)),
+    wellPanel(p(&quot;Panel 4&quot;))
+  ),
+  fluidRow(
+    column(width = 6, wellPanel(p(&quot;This appears in one column&quot;))
+    ),
+    column(width = 6, wellPanel(p(&quot;Then this in another column&quot;))
+    )
+  ),
+  fluidRow(
+    column(width = 3, wellPanel(p(&quot;Then a thin column underneath the top row&quot;))),
+    column(width = 9, wellPanel(p(&quot;Then a wide column next to that one&quot;)))
+  )
+)
+
+server &lt;- function(input, output) {}
+
+shinyApp(ui = ui, server = server, options = list(height = 470))</code></pre>
+<p><div style="width: 100% ; height: 470px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div></p>
+</div>
+<div id="navigable-layouts" class="section level3">
+<h3>Navigable layouts</h3>
+<p>Two commonly used layouts are <code>navbarPage</code> and <code>navlistPanel</code>. The former is generally used in place of <code>fluidPage</code> to wrap an entire page of UI. The latter can be used with <code>fluidPage</code> to add navigation on the left of the page.</p>
+<pre class="r"><code>navbarUi &lt;- navbarPage(&quot;Navbar&quot;,
+  tabPanel(&quot;Panel 1&quot;,
+    wellPanel(p(&quot;Panel the first&quot;))
+  ),
+  tabPanel(&quot;Panel 2&quot;,
+    wellPanel(p(&quot;Panel the second&quot;))
+  )
+)
+
+navpanelUi &lt;- fluidPage(&quot;Nav panel&quot;,
+  navlistPanel(
+    tabPanel(&quot;Panel 1&quot;,
+      wellPanel(p(&quot;Panel the first&quot;))
+    ),
+    tabPanel(&quot;Panel 2&quot;,
+      wellPanel(p(&quot;Panel the second&quot;))
+    ) 
+  )
+)
+
+server &lt;- function(input, output) {}
+
+shinyApp(ui = navbarUi, server = server, options = list(height = 170))</code></pre>
+<p><div style="width: 100% ; height: 170px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div></p>
+<pre class="r"><code>shinyApp(ui = navpanelUi, server = server, options = list(height = 170))</code></pre>
+<p><div style="width: 100% ; height: 170px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div></p>
+</div>
 </div>
 
 
