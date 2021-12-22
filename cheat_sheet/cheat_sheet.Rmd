@@ -1,13 +1,25 @@
 ---
 title: "Shiny Training Cheat Sheet"
 output: 
+  html_document: 
+    highlight: pygments
+    theme: cerulean
+---
+
+---
+title: "Shiny Training Cheat Sheet"
+output: 
+  html_document: 
+    theme: cerulean
   pdf_document: 
     highlight: pygments
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(shiny)
+library(shinyscreenshot)
 ```
 
 ## Create a new Shiny app
@@ -185,8 +197,40 @@ When using `fluidRow` and `column`, remember that a full row consists of 12 unit
 The `splitLayout` function allows for fine-grained control over exact column splits.
 A simple way to get a single column of UI, with each element on it's own row, is `verticalLayout`. These are just some commonly used layouts, see the `{shiny}` documentation for more examples.
 
-```{r, non-nav-layouts}
+```{r, non-nav-layouts, include = FALSE}
 
+ui <- fluidPage(id = "wrapper",
+  
+  splitLayout(
+    cellWidths = c("25%", "75%"),
+    wellPanel(p("Panel 1")),
+    wellPanel(p("Panel 2"))
+  ),
+  verticalLayout(
+    wellPanel(p("Panel 3")),
+    wellPanel(p("Panel 4"))
+  ),
+  fluidRow(
+    column(width = 6, wellPanel(p("This appears in one column"))
+    ),
+    column(width = 6, wellPanel(p("Then this in another column"))
+    )
+  ),
+  fluidRow(
+    column(width = 3, wellPanel(p("Then a thin column underneath the top row"))),
+    column(width = 9, wellPanel(p("Then a wide column next to that one")))
+  )
+)
+
+server <- function(input, output) {
+  screenshot(selector = "#wrapper", download = FALSE, server_dir = "./non-nav-layouts/")
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+```
 ui <- fluidPage(
   splitLayout(
     cellWidths = c("25%", "75%"),
@@ -212,36 +256,72 @@ ui <- fluidPage(
 server <- function(input, output) {}
 
 shinyApp(ui = ui, server = server, options = list(height = 470))
-
 ```
+
+![](./non-nav-layouts/shinyscreenshot.png)
 
 ### Navigable layouts
 
 Two commonly used layouts are `navbarPage` and `navlistPanel`. The former is generally used in place of `fluidPage` to wrap an entire page of UI. The latter can be used with `fluidPage` to add navigation on the left of the page.
 
-```{r, navbar-layout}
-navbarUi <- navbarPage("Navbar",
-  tabPanel("Panel 1",
-    wellPanel(p("Panel the first"))
-  ),
-  tabPanel("Panel 2",
-    wellPanel(p("Panel the second"))
-  )
-)
-
-navpanelUi <- fluidPage("Nav panel",
-  navlistPanel(
+```{r, navbar-layout, include = FALSE}
+ui <- div(id = "wrapper",
+  
+  navbarPage("Navbar",
     tabPanel("Panel 1",
       wellPanel(p("Panel the first"))
     ),
     tabPanel("Panel 2",
       wellPanel(p("Panel the second"))
-    ) 
+    )
+  ),
+  "Above, a navbarPage layout",
+  tags$hr(style="border-color: purple;"),
+  "Below, a navlistPanel layout",
+  fluidPage("Nav panel",
+    navlistPanel(
+      tabPanel("Panel 1",
+        wellPanel(p("Panel the first"))
+      ),
+      tabPanel("Panel 2",
+        wellPanel(p("Panel the second"))
+      ) 
+    )
+  )
+)
+
+server <- function(input, output) {
+  screenshot(selector = "#wrapper", download = FALSE, server_dir = "./nav-layouts/")
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+```
+ui <- div(
+  navbarPage("Navbar",
+    tabPanel("Panel 1",
+      wellPanel(p("Panel the first"))
+    ),
+    tabPanel("Panel 2",
+      wellPanel(p("Panel the second"))
+    )
+  ),
+  fluidPage("Nav panel",
+    navlistPanel(
+      tabPanel("Panel 1",
+        wellPanel(p("Panel the first"))
+      ),
+      tabPanel("Panel 2",
+        wellPanel(p("Panel the second"))
+      ) 
+    )
   )
 )
 
 server <- function(input, output) {}
 
-shinyApp(ui = navbarUi, server = server, options = list(height = 170))
-shinyApp(ui = navpanelUi, server = server, options = list(height = 170))
+shinyApp(ui = ui, server = server)
 ```
+
+![](./nav-layouts/shinyscreenshot.png)
