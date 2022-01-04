@@ -1,20 +1,15 @@
 ---
 title: "Shiny Training Cheat Sheet"
-output: 
+output:
   html_document: 
+    theme: cerulean
+    toc: yes
     highlight: pygments
-    theme: cerulean
----
-
----
-title: "Shiny Training Cheat Sheet"
-output: 
-  html_document: 
-    theme: cerulean
   pdf_document: 
     highlight: pygments
-runtime: shiny
+    toc: yes
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -107,7 +102,7 @@ shinyApp(ui, server)
 ## Debugging
 
 - Start simple
-- Make sure your code works outside of Shiny! One way of writing Shiny apps is known as **markdown first**; you write your code in RMarkdown initially, and only once everything (or some logical unit of the whole code) is working, only then create (or add to) a `{shiny}` app
+- Make sure your code works outside of Shiny! One way of writing Shiny apps is known as **markdown first**; you write your code in RMarkdown initially, and only once everything (or some logical unit of the whole code) is working, only then create (or add to) a Shiny app
 - Use the `cat()` or `print()` functions
 - Breakpoints and `browser()`
 - Run `options(shiny.reactlog=TRUE)`, run the app and press `Ctrl+F3` for an interactive summary of reactive activity
@@ -195,7 +190,7 @@ validate(
 
 When using `fluidRow` and `column`, remember that a full row consists of 12 units.
 The `splitLayout` function allows for fine-grained control over exact column splits.
-A simple way to get a single column of UI, with each element on it's own row, is `verticalLayout`. These are just some commonly used layouts, see the `{shiny}` documentation for more examples.
+A simple way to get a single column of UI, with each element on it's own row, is `verticalLayout`. These are just some commonly used layouts, see the Shiny documentation for more examples.
 
 ```{r, non-nav-layouts, include = FALSE}
 
@@ -228,6 +223,7 @@ server <- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 
+
 ```
 
 ```
@@ -255,7 +251,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {}
 
-shinyApp(ui = ui, server = server, options = list(height = 470))
+shinyApp(ui = ui, server = server)
 ```
 
 ![](./non-nav-layouts/shinyscreenshot.png)
@@ -265,6 +261,8 @@ shinyApp(ui = ui, server = server, options = list(height = 470))
 Two commonly used layouts are `navbarPage` and `navlistPanel`. The former is generally used in place of `fluidPage` to wrap an entire page of UI. The latter can be used with `fluidPage` to add navigation on the left of the page.
 
 ```{r, navbar-layout, include = FALSE}
+
+
 ui <- div(id = "wrapper",
   
   navbarPage("Navbar",
@@ -295,6 +293,7 @@ server <- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
+
 ```
 
 ```
@@ -325,3 +324,204 @@ shinyApp(ui = ui, server = server)
 ```
 
 ![](./nav-layouts/shinyscreenshot.png)
+
+## RMarkdown reports
+
+You can use RMarkdown to create reports that can then be downloaded by a user via a Shiny app.
+
+### Shiny side
+
+In the UI add a `downloadButton` that will initiate the report download.
+
+```
+ui <- ...(
+  ...
+  downloadButton("downloadReport", "Download report")),
+  ...  
+)
+```
+
+In the server create the corresponding output using `downloadHandler`. You can add some validation here. Note the `params` list - the contents of this list will be passed to RMarkdown.
+
+```
+server <- function(input, output) {
+  
+  output$downloadReport <- downloadHandler(
+    filename = "report.docx",
+    content = function(file){
+      
+      if(!isTruthy(input$trust)){
+        
+        showModal(
+          modalDialog(
+            title = "Error!",
+            HTML("Please select a trust first"),
+            easyClose = TRUE
+          )
+        )
+      }
+      
+      params <- list(date_from = input$date[1],
+                     date_to = input$date[2],
+                     trust = input$trust)
+      
+      render("report.Rmd", output_format = "word_document",
+             output_file = filename, quiet = TRUE, params = params,
+             envir = new.env(parent = globalenv()))
+      
+      # copy docx to 'file'
+      file.copy(filename, file, overwrite = TRUE)
+    }
+  )
+  
+}
+```
+
+### RMarkdown side
+
+Use the `params` passed by the Shiny app to create the report. These must be specified in the YAML frontmatter.
+
+```
+---
+...
+params: 
+  date_from : NA
+  date_to : NA
+  trust : NA
+---
+```
+
+They can be used just like `input` and `output` in Shiny.
+
+```
+report_data <- ae_attendances  %>% 
+  filter(period >= params$date_from, period <= params$date_to,
+         Name %in% params$trust)
+
+# Add the contents of the report now, e.g. tables, plots, maps
+```
+
+## Shinydashboard
+
+A simple way of creating Shiny dashboards is with the shinydashboard package.
+
+```{r, shinydashboard-layout, include = FALSE}
+
+library(shinydashboard)
+
+ui <- div(id = "wrapper",
+  dashboardPage(
+    dashboardHeader(title = "A dashboard"),
+    dashboardSidebar(
+      sidebarMenu(id = "tabset",
+                  menuItem("Tab1", tabName = "tab1", icon = icon("dashboard")),
+                  menuItem("Tab2", tabName = "tab2", icon = icon("th"))
+      ),
+      uiOutput("dateRangeUI")
+    ),
+    dashboardBody(
+      tabItems(
+        # First tab content
+        tabItem(tabName = "tab1",
+                fluidRow(
+                  box(title = "Simple example",
+                      plotOutput("graph")),
+                  box(width = 3, 
+                      selectInput("numbers",
+                                  "Select some numbers",
+                                  choices = 1:10,
+                                  multiple = TRUE)
+                      )
+                  )
+        ),
+        
+        # Second tab content
+        tabItem(tabName = "tab2")
+      )
+    )
+  )
+)
+
+server <- function(input, output) {
+  screenshot(selector = "#wrapper", download = FALSE, server_dir = "./shinydashboard-layout/")
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+```
+ui <- dashboardPage(
+  dashboardHeader(title = "A dashboard"),
+  dashboardSidebar(
+    sidebarMenu(id = "tabset",
+                menuItem("Tab1", tabName = "tab1", icon = icon("dashboard")),
+                menuItem("Tab2", tabName = "tab2", icon = icon("th"))
+    ),
+    uiOutput("dateRangeUI")
+  ),
+  dashboardBody(
+    tabItems(
+      # First tab content
+      tabItem(tabName = "tab1",
+              fluidRow(
+                box(title = "Simple example",
+                    plotOutput("graph")),
+                box(width = 3, 
+                    selectInput("numbers",
+                                "Select some numbers",
+                                choices = 1:10,
+                                multiple = TRUE)
+                    )
+                )
+      ),
+      
+      # Second tab content
+      tabItem(tabName = "tab2",
+              ...
+      )
+    )
+  )
+)
+```
+
+![](./shinydashboard-layout/shinyscreenshot.png)
+
+## Value boxes
+
+A value box is an element commonly found on dashboards and is used to highlight a specific single value.
+
+```
+ui <- ...(
+  ...
+  valueBoxOutput("valueBox1")
+  ...
+)
+
+server <- function(input, output) {
+  
+  output$valueBox1 <- renderValueBox({
+    
+    valueBox(
+      input$date[2] - input$date[1],
+      "Days summarised", 
+      icon = icon("calendar-alt"),
+      color = "green"
+    )
+  })
+}
+```
+
+## Deployment
+
+There are many ways of deploying your app for others to use.
+
+- runGitHub(“gapminder”, “ChrisBeeley”)
+- runUrl(“http://www.myserver/shinyapps/myshinyapp.zip”)
+- runGist(“6571951”)
+- Just stick it in a shared area and get people to run it themselves
+- shinyapps.io
+- ShinyProxy
+- Proxied authentication (Apache/ Nginx)
+- Paid (RStudio Connect/ Shiny Pro)
+- Cloud/ firewalled

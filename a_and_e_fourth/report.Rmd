@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 report_data <- ae_attendances  %>% 
   filter(period >= params$date_from, period <= params$date_to,
-         Name == params$trust)
+         Name %in% params$trust)
 
 report_data %>%
   group_by(period, Name) %>%
