@@ -1,4 +1,4 @@
-# Shiny training
+# Shiny training <a alt="NHS-R Community's logo" href='https://nhsrcommunity.com/'><img src='https://nhs-r-community.github.io/assets/logo/nhsr-logo.png' align="right" height="80" /></a>
 
 ## One day Shiny training for health and care analysts
 
