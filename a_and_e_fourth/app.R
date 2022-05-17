@@ -98,11 +98,11 @@ server <- function(input, output) {
                      trust = input$trust)
       
       render("report.Rmd", output_format = "word_document",
-             output_file = "report.docx", quiet = TRUE, params = params,
+             output_file = filename, quiet = TRUE, params = params,
              envir = new.env(parent = globalenv()))
       
       # copy docx to 'file'
-      file.copy("report.docx", file, overwrite = TRUE)
+      file.copy(filename, file, overwrite = TRUE)
     }
   )
   
