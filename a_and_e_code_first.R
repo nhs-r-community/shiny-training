@@ -23,7 +23,7 @@ sidebarLayout(
 
 plotOutput(), # place graph in tab one
   
-leafletOutput() # place map in tab two
+leafletOutput(), # place map in tab two
 
   mainPanel(
     tabsetPanel(
