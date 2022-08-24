@@ -1056,6 +1056,16 @@
         "terra"
       ]
     },
+    "reactlog": {
+      "Package": "reactlog",
+      "Version": "1.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5a30d3b8883107ae07c2137a33c000b2",
+      "Requirements": [
+        "jsonlite"
+      ]
+    },
     "readr": {
       "Package": "readr",
       "Version": "2.1.2",
